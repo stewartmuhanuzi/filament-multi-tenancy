@@ -60,10 +60,7 @@ class TaskResource extends Resource
                 Tables\Columns\TextColumn::make('due_date')->date(),
                 Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\BadgeColumn::make('labels.name')
-                    ->badge()
-                    ->formatStateUsing(function ($state) {
-                        return $state === 'Feature' ? 'success' : 'danger';
-                    }),
+                    ->badge(),
             ])
             ->filters([
                 //
