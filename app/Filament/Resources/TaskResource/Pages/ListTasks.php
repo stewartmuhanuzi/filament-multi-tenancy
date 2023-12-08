@@ -5,7 +5,6 @@ namespace App\Filament\Resources\TaskResource\Pages;
 use App\Filament\Imports\TaskImporter;
 use App\Filament\Resources\TaskResource;
 use Filament\Actions;
-use Filament\Actions\ImportAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListTasks extends ListRecords
@@ -16,7 +15,7 @@ class ListTasks extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
-            ImportAction::make()
+            Actions\ImportAction::make()
                 ->importer(TaskImporter::class)
                 ->label('Import Tasks')
                 ->color('success')
