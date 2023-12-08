@@ -69,4 +69,9 @@ class User extends Authenticatable implements HasTenants, FilamentUser
 
         return $this->belongsToMany(Team::class);
     }
+
+    public function tasks(): BelongsToMany
+    {
+        return $this->belongsToMany(Task::class, 'task_user');
+    }
 }

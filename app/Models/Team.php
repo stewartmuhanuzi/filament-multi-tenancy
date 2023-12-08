@@ -23,7 +23,7 @@ class Team extends Model
         return $this->hasMany(Task::class);
     }
 
-    public function members(): BelongsToMany
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
     }

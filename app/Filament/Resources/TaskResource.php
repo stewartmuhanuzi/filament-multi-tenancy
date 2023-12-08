@@ -9,6 +9,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class TaskResource extends Resource
@@ -25,8 +26,8 @@ class TaskResource extends Resource
                     ->schema([
                     Forms\Components\Section::make()
                         ->schema([
-                            Forms\Components\TextInput::make('name')->label('Task Name'),
-                            Forms\Components\MarkdownEditor::make('body')->label('Task Description'),
+                            Forms\Components\TextInput::make('name')->required()->label('Task Name'),
+                            Forms\Components\MarkdownEditor::make('body')->required()->label('Task Description'),
                         ])
                 ]),
                 Forms\Components\Group::make()
@@ -39,14 +40,19 @@ class TaskResource extends Resource
                                 Forms\Components\Select::make('status')
                                     ->label('Status')
                                     ->options([
-                                        'todo' => 'To Do',
+                                        'todo' => 'Todo',
                                         'in_progress' => 'In Progress',
                                         'done' => 'Done',
                                 ]),
                                 Forms\Components\Select::make('label_id')
                                     ->relationship('labels', 'name')
                                     ->multiple()
-                                    ->required()
+                                    ->required(),
+
+                                Forms\Components\Select::make('user_id')
+                                    ->label('Assign Task To')
+                                    ->relationship('users', 'name')
+                                    ->multiple()
                             ])
                     ]),
             ]);
@@ -57,10 +63,29 @@ class TaskResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')->sortable()->searchable(),
-                Tables\Columns\TextColumn::make('due_date')->date(),
-                Tables\Columns\TextColumn::make('status'),
-                Tables\Columns\BadgeColumn::make('labels.name')
-                    ->badge(),
+                Tables\Columns\TextColumn::make('due_date')->date()->sortable(),
+                TextColumn::make('status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'todo' => 'gray',
+                        'in_progress' => 'warning',
+                        'done' => 'success',
+                    }),
+                Tables\Columns\TextColumn::make('body')
+                    ->limit(5)
+                    ->tooltip(function (TextColumn $column): ?string {
+                        $state = $column->getState();
+
+                        if (strlen($state) <= $column->getCharacterLimit()) {
+                            return null;
+                        }
+                        return $state;
+                    }),
+                TextColumn::make('labels.name')
+                    ->badge()
+                    ->color('success'),
+                Tables\Columns\TextColumn::make('users.name')
+                    ->label('Assigned To'),
             ])
             ->filters([
                 //
