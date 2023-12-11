@@ -32,6 +32,10 @@ class AppPanelProvider extends PanelProvider
             ->path('app')
             ->tenant(Team::class)
             ->tenantRegistration(RegisterTeam::class)
+            ->renderHook(
+                'panels::auth.login.form.after',
+                fn () => view('auth.socialite.google')
+            )
             ->tenantProfile(EditTeamProfile::class)
             ->login()
             ->colors([

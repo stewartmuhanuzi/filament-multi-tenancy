@@ -26,6 +26,7 @@ class User extends Authenticatable implements HasTenants, FilamentUser
     protected $fillable = [
         'name',
         'email',
+        'google_id',
         'password',
     ];
 
