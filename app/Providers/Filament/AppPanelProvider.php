@@ -6,6 +6,7 @@ use App\Filament\Pages\Tenancy\EditTeamProfile;
 use App\Filament\Pages\Tenancy\RegisterTeam;
 use App\Http\Middleware\ApplyTenantScopes;
 use App\Models\Team;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -21,6 +22,9 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use pxlrbt\FilamentSpotlight\SpotlightPlugin;
+use Swis\Filament\Backgrounds\FilamentBackgroundsPlugin;
+use Swis\Filament\Backgrounds\ImageProviders\MyImages;
 
 class AppPanelProvider extends PanelProvider
 {
@@ -32,10 +36,6 @@ class AppPanelProvider extends PanelProvider
             ->path('app')
             ->tenant(Team::class)
             ->tenantRegistration(RegisterTeam::class)
-            ->renderHook(
-                'panels::auth.login.form.after',
-                fn () => view('auth.socialite.google')
-            )
             ->tenantProfile(EditTeamProfile::class)
             ->login()
             ->colors([
@@ -62,6 +62,15 @@ class AppPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
                 ApplyTenantScopes::class,
+            ])
+            ->plugins([
+                FilamentBackgroundsPlugin::make()
+                    ->imageProvider(
+                        MyImages::make()
+                            ->directory('images')
+                    ),
+                SpotlightPlugin::make(),
+                FilamentShieldPlugin::make()
             ])
             ->authMiddleware([
                 Authenticate::class,

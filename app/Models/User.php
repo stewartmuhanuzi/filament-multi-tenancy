@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Laravel\Sanctum\HasApiTokens;
@@ -13,10 +14,11 @@ use Filament\Models\Contracts\HasTenants;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements HasTenants, FilamentUser
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasPanelShield;
 
     /**
      * The attributes that are mass assignable.
@@ -26,7 +28,6 @@ class User extends Authenticatable implements HasTenants, FilamentUser
     protected $fillable = [
         'name',
         'email',
-        'google_id',
         'password',
     ];
 
@@ -74,5 +75,10 @@ class User extends Authenticatable implements HasTenants, FilamentUser
     public function tasks(): BelongsToMany
     {
         return $this->belongsToMany(Task::class, 'task_user');
+    }
+
+    public function canAccessFilament():bool
+    {
+        return true;
     }
 }
