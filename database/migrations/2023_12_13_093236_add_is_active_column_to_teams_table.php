@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('google_id')->nullable();
+        Schema::table('teams', function (Blueprint $table) {
+            $table->boolean('is_active')->default(false);
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('google_id');
+        Schema::table('teams', function (Blueprint $table) {
+            $table->dropColumn('is_active');
         });
     }
 };

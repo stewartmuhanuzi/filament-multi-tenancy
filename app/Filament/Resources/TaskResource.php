@@ -5,12 +5,17 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TaskResource\Pages;
 use App\Filament\Resources\TaskResource\RelationManagers;
 use App\Models\Task;
+use AymanAlhattami\FilamentDateScopesFilter\DateScopeFilter;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
+use Webbingbrasil\FilamentAdvancedFilter\Filters\BooleanFilter;
+use Webbingbrasil\FilamentAdvancedFilter\Filters\DateFilter;
+use Webbingbrasil\FilamentAdvancedFilter\Filters\TextFilter;
 
 class TaskResource extends Resource
 {
@@ -19,6 +24,8 @@ class TaskResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationGroup = "Task Management";
+
+    protected static ?string $tenantOwnershipRelationshipName = 'team';
 
     public static function form(Form $form): Form
     {
@@ -90,13 +97,28 @@ class TaskResource extends Resource
                     ->label('Assigned To'),
             ])
             ->filters([
-                //
+                DateFilter::make('due_date'),
+//                DateScopeFilter::make('created_at'),
+                BooleanFilter::make('is_active'),
+
+                TextFilter::make('name')
+                    ->default(TextFilter::CLAUSE_CONTAIN)
+                    ->enableClauseLabel()
+                    ->debounce(700)
+                    ->wrapperUsing(fn () => Forms\Components\Group::make()),
+
+                TextFilter::make('users')
+                    ->relationship('users', 'name')
+                    ->enableClauseLabel()
+                    ->wrapperUsing(fn () => Forms\Components\Group::make())
+                    ->default(TextFilter::CLAUSE_CONTAIN)
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    ExportBulkAction::make(),
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
