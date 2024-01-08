@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Archilex\AdvancedTables\Concerns\HasViews;
 use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
@@ -18,18 +19,14 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements HasTenants, FilamentUser
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasPanelShield;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasPanelShield, HasViews;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for serialization.

@@ -6,10 +6,13 @@ use App\Filament\Pages\Tenancy\EditTeamProfile;
 use App\Filament\Pages\Tenancy\RegisterTeam;
 use App\Http\Middleware\ApplyTenantScopes;
 use App\Models\Team;
+use Archilex\AdvancedTables\Enums\FavoritesBarTheme;
+use Archilex\AdvancedTables\Plugin\AdvancedTablesPlugin;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -22,7 +25,6 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use pxlrbt\FilamentSpotlight\SpotlightPlugin;
 use Swis\Filament\Backgrounds\FilamentBackgroundsPlugin;
 use Swis\Filament\Backgrounds\ImageProviders\MyImages;
 
@@ -69,9 +71,28 @@ class AppPanelProvider extends PanelProvider
                         MyImages::make()
                             ->directory('images')
                     ),
-                SpotlightPlugin::make(),
-                FilamentShieldPlugin::make()
+                FilamentShieldPlugin::make(),
+                AdvancedTablesPlugin::make()
+                    ->quickSaveMakeGlobalFavorite()
+                    ->persistActiveViewInSession()
+                    ->reorderableColumnsAlwaysDisplayHiddenLabel(false)
+                    ->favoritesBarDivider()
+                    ->favoritesBarTheme(FavoritesBarTheme::Filament)
+                    ->viewManagerSlideOver()
+                    ->tenant(Team::class)
+                    ->resourceNavigationIcon('heroicon-o-star')
+
             ])
+//            ->navigationGroups([
+//                NavigationGroup::make()
+//                    ->label('Shop'),
+//                NavigationGroup::make()
+//                    ->label('Task Management'),
+//                NavigationGroup::make()
+//                    ->label('Member Management'),
+//                NavigationGroup::make()
+//                    ->label('Filament Shield'),
+//            ])
             ->authMiddleware([
                 Authenticate::class,
             ]);

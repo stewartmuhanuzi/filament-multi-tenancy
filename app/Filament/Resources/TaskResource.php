@@ -71,8 +71,8 @@ class TaskResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->sortable()->searchable(),
-                Tables\Columns\TextColumn::make('due_date')->date()->sortable(),
+                Tables\Columns\TextColumn::make('name')->sortable()->toggleable()->searchable(),
+                Tables\Columns\TextColumn::make('due_date')->date()->toggleable()->sortable(),
                 TextColumn::make('status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {

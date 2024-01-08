@@ -4,11 +4,13 @@ namespace App\Filament\Resources\TaskResource\Pages;
 
 use App\Filament\Imports\TaskImporter;
 use App\Filament\Resources\TaskResource;
+use Archilex\AdvancedTables\AdvancedTables;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListTasks extends ListRecords
 {
+    use AdvancedTables;
     protected static string $resource = TaskResource::class;
 
     protected function getHeaderActions(): array
